@@ -85,6 +85,9 @@ export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 echo '*** install atom ***'
 brew cask install atom
 
+echo '*** install cyberduck ***'
+brew cask install cyberduck
+
 echo '*** install google chrome ***'
 brew cask install google-chrome
 
@@ -93,6 +96,12 @@ brew cask install transmission
 
 echo '*** iterm2 ***'
 brew cask install iterm2
+
+echo '*** install keepingyouawake ***'
+brew cask install keepingyouawake
+
+echo '*** install sequel-pro ***'
+brew cask install sequel-pro
 
 echo '*** install skype ***'
 brew cask install skype
@@ -106,10 +115,22 @@ brew cask install flux
 echo '*** install spotify ***'
 brew cask install spotify
 
-echo '*** install vlc ***'
-brew cask install vlc
+echo '*** install telegram ***'
+brew cask install telegram
 
-echo '*** install s ***'
+echo '*** install the-unarchiver ***'
+brew cask install the-unarchiver
+
+echo '*** install tunnelblick ***'
+brew cask install tunnelblick
+
+echo '*** install vagrant ***'
+brew cask install vagrant
+
+echo '*** install virtualbox ***'
+brew cask install virtualbox
+
+echo '*** install vlc ***'
 brew cask install vlc
 
 echo '*** cleaning up cask installs ***'
