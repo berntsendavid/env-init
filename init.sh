@@ -230,7 +230,7 @@ defaults write com.apple.CrashReporter UseUNC 1
 
 # create global .gitignore
 echo '*** create global .gitignore ***'
-curl -# https://raw.githubusercontent.com/theavish/env-init/master/assets/gitignore.txt > ~/.gitignore
+curl -# https://raw.githubusercontent.com/fouxarn/env-init/master/assets/gitignore.txt > ~/.gitignore
 
 # set git user info and credentials
 echo '*** set git user info and credentials ***'
@@ -282,21 +282,11 @@ defaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandle
 #############################
 ### Atom Packages ###
 #############################
-echo '*** installing atom packages ***'
-apm install autocomplete-python
-apm install compare-files
-apm install git-plus
-apm install highlight-line
-apm install less-than-slash
-apm install linter
-apm install linter-jsxhint
-apm install markdown-writer
-apm install merge-conflicts
-apm install pigments
-apm install project-manager
-apm install react
-apm install seti-ui
-
+echo '*** installing atom package-sync ***'
+apm install package-sync
+echo '*** symlinking atom packages.cson ***'
+ln -s assets/packages.cson ~/.atom/packages.cson
+echo '*** run package-sync:sync in atom to sync packages ***'
 
 #######################
 ### install ohmyzsh ###
