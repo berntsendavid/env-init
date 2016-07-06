@@ -85,14 +85,14 @@ export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 echo '*** install atom ***'
 brew cask install atom
 
-echo '*** install cyberduck ***'
-brew cask install cyberduck
+#echo '*** install cyberduck ***'
+#brew cask install cyberduck
 
 echo '*** install google chrome ***'
 brew cask install google-chrome
 
-echo '*** install transmission ***'
-brew cask install transmission
+#echo '*** install transmission ***'
+#brew cask install transmission
 
 echo '*** iterm2 ***'
 brew cask install iterm2
@@ -100,17 +100,17 @@ brew cask install iterm2
 echo '*** install keepingyouawake ***'
 brew cask install keepingyouawake
 
-echo '*** install sequel-pro ***'
-brew cask install sequel-pro
+#echo '*** install sequel-pro ***'
+#brew cask install sequel-pro
 
 echo '*** install skype ***'
 brew cask install skype
 
-echo '*** install steam ***'
-brew cask install steam
+#echo '*** install steam ***'
+#brew cask install steam
 
-echo '*** install flux ***'
-brew cask install flux
+#echo '*** install flux ***'
+#brew cask install flux
 
 echo '*** install spotify ***'
 brew cask install spotify
@@ -121,17 +121,17 @@ brew cask install telegram
 echo '*** install the-unarchiver ***'
 brew cask install the-unarchiver
 
-echo '*** install tunnelblick ***'
-brew cask install tunnelblick
+#echo '*** install tunnelblick ***'
+#brew cask install tunnelblick
 
-echo '*** install vagrant ***'
-brew cask install vagrant
+#echo '*** install vagrant ***'
+#brew cask install vagrant
 
-echo '*** install virtualbox ***'
-brew cask install virtualbox
+#echo '*** install virtualbox ***'
+#brew cask install virtualbox
 
-echo '*** install vlc ***'
-brew cask install vlc
+#echo '*** install vlc ***'
+#brew cask install vlc
 
 echo '*** cleaning up cask installs ***'
 brew cask cleanup
@@ -175,8 +175,8 @@ echo '*** make hidden app icons translucent ***'
 defaults write com.apple.dock showhidden -bool true
 
 # Disable the Launchpad gesture (pinch with thumb and three fingers)
-echo '*** disable launchpad gesture ***'
-defaults write com.apple.dock showLaunchpadGestureEnabled -int 0
+#echo '*** disable launchpad gesture ***'
+#defaults write com.apple.dock showLaunchpadGestureEnabled -int 0
 
 # Disable prompt when quitting iterm2
 echo '*** Disable prompt when quitting iterm2 ***'
@@ -294,3 +294,11 @@ echo '*** run package-sync:sync in atom to sync packages ***'
 
 echo '*** install ohmyzsh ***'
 sh -c "$(curl -#fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
+######################
+### install vundle ###
+######################
+
+echo '*** install vundle ***'
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+
