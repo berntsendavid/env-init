@@ -46,7 +46,7 @@ nmap <leader>w :w!<cr>
 nmap <leader>q :q!<cr>
 
 " Open explorer
-nmap <leader>e :E<cr>
+nmap <leader>e :Explore<cr>
 nmap <leader>te :Texplore<cr>
 nmap <leader>se :Sexplore<cr>
 nmap <leader>ve :Vexplore<cr><c-w>=
@@ -147,7 +147,7 @@ syntax enable
 
 
 set t_Co=256
-colorscheme wombat256mod
+colorscheme dracula
 
 " Set utf8 as standard encoding and en_US as the standard language
 set encoding=utf8
@@ -360,6 +360,7 @@ map <leader>x :x<cr>
 map <leader>pp :setlocal paste!<cr>
 
 
+imap jk <Esc>
 nnoremap <Tab> <Esc>
 vnoremap <Tab> <Esc>gV
 onoremap <Tab> <Esc>

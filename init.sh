@@ -82,8 +82,8 @@ brew install python3
 echo '*** change default cask install location to ~/Applications ***'
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
-echo '*** install atom ***'
-brew cask install atom
+#echo '*** install atom ***'
+#brew cask install atom
 
 #echo '*** install cyberduck ***'
 #brew cask install cyberduck
@@ -229,8 +229,8 @@ echo '*** change crash reporter to notification ***'
 defaults write com.apple.CrashReporter UseUNC 1
 
 # create global .gitignore
-echo '*** create global .gitignore ***'
-curl -# https://raw.githubusercontent.com/fouxarn/env-init/master/assets/gitignore.txt > ~/.gitignore
+# echo '*** create global .gitignore ***'
+# curl -# https://raw.githubusercontent.com/fouxarn/env-init/master/assets/gitignore.txt > ~/.gitignore
 
 # set git user info and credentials
 echo '*** set git user info and credentials ***'
@@ -239,8 +239,8 @@ git config --global user.email $user_email
 git config --global credential.helper osxkeychain
 
 # update PATH
-echo '*** update path ***'
-echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.bash_profile
+# echo '*** update path ***'
+# echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.bash_profile
 
 # Disable local Time Machine snapshots
 echo '*** disable local time machine snapshots ***'
@@ -270,23 +270,23 @@ defaults write org.m0k.transmission AutoSize -bool true
 #############################
 
 # set atom as default text editor in git
-echo '*** set atom as default test editor in git ***'
-git config --global core.editor "atom"
+# echo '*** set atom as default test editor in git ***'
+# git config --global core.editor "atom"
 
 # set atom as default text editor os-wide
-echo '*** set atom as default text editor os-wide ***'
-defaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \
-'{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=com.github.atom;}'
+# echo '*** set atom as default text editor os-wide ***'
+# defaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \
+# '{LSHandlerContentType=public.plain-text;LSHandlerRoleAll=com.github.atom;}'
 
 
 #############################
 ### Atom Packages ###
 #############################
-echo '*** installing atom package-sync ***'
-apm install package-sync
-echo '*** symlinking atom packages.cson ***'
-ln -s assets/packages.cson ~/.atom/packages.cson
-echo '*** run package-sync:sync in atom to sync packages ***'
+# echo '*** installing atom package-sync ***'
+# apm install package-sync
+# echo '*** symlinking atom packages.cson ***'
+# ln -s assets/packages.cson ~/.atom/packages.cson
+# echo '*** run package-sync:sync in atom to sync packages ***'
 
 #######################
 ### install ohmyzsh ###
@@ -295,15 +295,17 @@ echo '*** run package-sync:sync in atom to sync packages ***'
 echo '*** install ohmyzsh ***'
 sh -c "$(curl -#fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
-###################################
-### setup vim and zsh initfiles ###
-###################################
+######################
+### setup dotfiles ###
+######################
 
 cp ./dotfiles/.zshrc ~/.zshrc
 cp ./dotfiles/.vimrc ~/.vimrc
+cp ./dotfiles/.profile ~/.profile
+cp ./dotfiles/.spacemacs ~/.spacemacs
 
 ######################################
 ######################################
 
 cp ./colorschemes/spaceship.zsh-theme ~/.oh-my-zsh/custom/themes/spaceship.zsh-themes
-cp ./colorschemes/wombat256mod.vim ~/.vim/colors/wombat256mod.vim
+cp ./colorschemes/wombat256mod.vim ~/.vim/colors/dracula.vim
