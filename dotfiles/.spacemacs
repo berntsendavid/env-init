@@ -17,6 +17,8 @@ values."
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers '(
+                                       markdown
+                                       octave
 																			 vimscript
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
@@ -30,10 +32,12 @@ values."
                       auto-completion-complete-with-key-sequence-delay 0.1
                       auto-completion-private-snippets-directory nil)
 		 bibtex
+		 clojure
      (colors :variables
              colors-enable-rainbow-identifiers nil
              colors-enable-nyan-cat-progress-bar (display-graphic-p))
      emacs-lisp
+     dash
      git
      javascript
 		 (latex :variables
@@ -42,6 +46,8 @@ values."
 						latex-enable-folding t)
      (osx :variables osx-use-option-as-meta nil)
      (python :variables
+						 python-test-runner '(nose pytest)
+						 python-sort-imports-on-save t
              python-enable-yapf-format-on-save t)
      react
 		 restclient
@@ -119,13 +125,19 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         solarized-dark 
+   dotspacemacs-themes '(
+                         ;; Dark themes
+                         oceanic
+                         wombat
+                         ujelly
+                         ;;spacemacs-dark
+                         ;;leuven
+                         ;;monokai
+                         ;; Light themes
+                         apropospriate-light
                          spacemacs-light
-                         solarized-light 
-                         leuven
-                         monokai
-                         zenburn)
+                         ;;solarized-light 
+                         )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -257,6 +269,20 @@ values."
    dotspacemacs-whitespace-cleanup nil
    ))
 
+(defun my-setup-indent (n)
+	;; java/c/c++
+  (setq c-basic-offset n)
+  ;; web development
+  (setq coffee-tab-width n) ; coffeescript
+  (setq javascript-indent-level n) ; javascript-mode
+  (setq js-indent-level n) ; js-mode
+  (setq js2-basic-offset n) ; js2-mode, in latest js2-mode, it's alias of js-indent-level
+  (setq web-mode-markup-indent-offset n) ; web-mode, html tag in html file
+  (setq web-mode-css-indent-offset n) ; web-mode, css in html file
+  (setq web-mode-code-indent-offset n) ; web-mode, js code in html file
+  (setq css-indent-offset n) ; css-mode
+	)
+
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init', before layer configuration
@@ -264,9 +290,12 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
+	(my-setup-indent 2) ; indent 2 spaces width
   )
 
 (defun dotspacemacs/user-config ()
+	(package-initialize)
+
 	;; Global settings
 	(global-company-mode t)
   (global-hl-line-mode -1)
@@ -274,92 +303,80 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 	;; Default settings
   (fset 'evil-visual-update-x-selection 'ignore)
-  (setq-default evil-escape-key-sequence "jk")
-  (setq-default evil-escape-delay 0.2)
-  (setq-default indent-tabs-mode t)
-	(setq-default git-magit-status-fullscreen t)
-	(setq-default TeX-master nil) ; Query for master file.
+  (setq mmm-global-mode 'maybe)
   (setq-default
-   js2-basic-offset 2
-   css-indent-offset 2
-   web-mode-markup-indent-offset 2
-   web-mode-css-indent-offset 2
-   web-mode-code-indent-offset 2
-   web-mode-attr-indent-offset 2)
+	 evil-escape-key-sequence "jk"
+	 evil-escape-delay 0.2
+	 indent-tabs-mode nil
+	 git-magit-status-fullscreen t
+	 TeX-master nil
+	 evil-move-beyond-eol t)
 
-	;; Hooks
-  (add-hook 'js2-mode-hook
-            (defun my-js2-mode-setup ()
-              (flycheck-mode t)
-              (when (executable-find "eslint")
-                (flycheck-select-checker 'javascript-eslint))))
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'objc-mode-hook 'irony-mode)
+  (add-hook 'prog-mode-hook 'rainbow-mode)
+
+  ;; replace the `completion-at-point' and `complete-symbol' bindings in
+  ;; irony-mode's buffers by irony-mode's function
+  (defun my-irony-mode-hook ()
+    (define-key irony-mode-map [remap completion-at-point]
+      'irony-completion-at-point-async)
+    (define-key irony-mode-map [remap complete-symbol]
+      'irony-completion-at-point-async))
+  (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
   (add-hook 'yaml-mode-hook
             (lambda ()
               (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
+	(add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
 
-(add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+	;; http://www.flycheck.org/manual/latest/index.html
+	(require 'flycheck)
 
-;; http://www.flycheck.org/manual/latest/index.html
-(require 'flycheck)
+	;; turn on flychecking globally
+	(add-hook 'after-init-hook #'global-flycheck-mode)
 
-;; turn on flychecking globally
-(add-hook 'after-init-hook #'global-flycheck-mode)
+	;; disable jshint since we prefer eslint checking
+	(setq-default flycheck-disabled-checkers
+								(append flycheck-disabled-checkers
+												'(javascript-jshint)))
 
-;; disable jshint since we prefer eslint checking
-(setq-default flycheck-disabled-checkers
-              (append flycheck-disabled-checkers
-                      '(javascript-jshint)))
+	;; use eslint with web-mode for jsx files
+	(flycheck-add-mode 'javascript-eslint 'web-mode)
 
-;; use eslint with web-mode for jsx files
-(flycheck-add-mode 'javascript-eslint 'web-mode)
+	;; customize flycheck temp file prefix
+	(setq-default flycheck-temp-prefix ".flycheck")
 
-;; customize flycheck temp file prefix
-(setq-default flycheck-temp-prefix ".flycheck")
+	;; disable json-jsonlist checking for json files
+	(setq-default flycheck-disabled-checkers
+								(append flycheck-disabled-checkers
+												'(json-jsonlist)))
 
-;; disable json-jsonlist checking for json files
-(setq-default flycheck-disabled-checkers
-              (append flycheck-disabled-checkers
-                      '(json-jsonlist)))
+	;; https://github.com/purcell/exec-path-from-shell
+	;; only need exec-path-from-shell on OSX
+	;; this hopefully sets up path and other vars better
+	(when (memq window-system '(mac ns))
+		(exec-path-from-shell-initialize))
 
-;; https://github.com/purcell/exec-path-from-shell
-;; only need exec-path-from-shell on OSX
-;; this hopefully sets up path and other vars better
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
-
-;; adjust indents for web-mode to 2 spaces
-(defun my-web-mode-hook ()
-  "Hooks for Web mode. Adjust indents"
+	;; adjust indents for web-mode to 2 spaces
+	(defun my-web-mode-hook ()
+		"Hooks for Web mode. Adjust indents"
   ;;; http://web-mode.org/
-  (web-mode-use-tabs)
-  ;; (setq web-mode-markup-indent-offset 2)
-  ;; (setq web-mode-css-indent-offset 2)
-  ;; (setq web-mode-code-indent-offset 2)
+		(web-mode-use-tabs))
+
+	(add-hook 'web-mode-hook  'my-web-mode-hook)
+
+	;; for better jsx syntax-highlighting in web-mode
+	;; - courtesy of Patrick @halbtuerke
+	(defadvice web-mode-highlight-part (around tweak-jsx activate)
+		(if (equal web-mode-content-type "jsx")
+				(let ((web-mode-enable-part-face nil))
+					ad-do-it)
+			ad-do-it))
   )
-(add-hook 'web-mode-hook  'my-web-mode-hook)
-
-;; for better jsx syntax-highlighting in web-mode
-;; - courtesy of Patrick @halbtuerke
-(defadvice web-mode-highlight-part (around tweak-jsx activate)
-  (if (equal web-mode-content-type "jsx")
-      (let ((web-mode-enable-part-face nil))
-        ad-do-it)
-    ad-do-it))
-
-"Configuration function for user code.
-This function is called at the very end of Spacemacs initialization after
-layers configuration.
-This is the place where most of your configurations should be done. Unless it is
-explicitly specified that a variable should be set before a package is loaded,
-you should place your code here."
-)
-
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (custom-set-variables
@@ -371,13 +388,20 @@ you should place your code here."
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#272822" "#F92672" "#A6E22E" "#E6DB74" "#66D9EF" "#FD5FF0" "#A1EFE4" "#F8F8F2"])
+ '(beacon-color "#F8BBD0")
  '(compilation-message-face (quote default))
  '(cua-global-mark-cursor-color "#2aa198")
  '(cua-normal-cursor-color "#839496")
  '(cua-overwrite-cursor-color "#b58900")
  '(cua-read-only-cursor-color "#859900")
+ '(evil-emacs-state-cursor (quote ("#D50000" hbar)) t)
+ '(evil-insert-state-cursor (quote ("#D50000" bar)) t)
+ '(evil-normal-state-cursor (quote ("#F57F17" box)) t)
+ '(evil-visual-state-cursor (quote ("#66BB6A" box)) t)
+ '(evil-want-Y-yank-to-eol t)
  '(fci-rule-color "#073642" t)
  '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
+ '(highlight-indent-guides-auto-enabled nil)
  '(highlight-symbol-colors
    (--map
     (solarized-color-blend it "#002b36" 0.25)
@@ -407,11 +431,13 @@ you should place your code here."
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(package-selected-packages
    (quote
-    (vimrc-mode dactyl-mode ob-http pug-mode hide-comnt org-ref key-chord ivy helm-bibtex parsebib biblio biblio-core company-auctex auctex elm-mode elm-yasnippets flycheck-elm yapfify uuidgen toc-org powerline py-isort spinner osx-dictionary org org-plus-contrib org-bullets livid-mode skewer-mode simple-httpd live-py-mode link-hint parent-mode git-link flyspell-correct-helm flyspell-correct pkg-info epl flx eyebrowse evil-visual-mark-mode evil-unimpaired evil-ediff anzu evil goto-chg undo-tree highlight eshell-z dumb-jump diminish column-enforce-mode color-identifiers-mode bind-map bind-key packed dash s avy async popup package-build csharp-mode json-snatcher json-reformat multiple-cursors js2-mode request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter magit-popup with-editor web-completion-data dash-functional tern pos-tip company yasnippet anaconda-mode pythonic f auto-complete zenburn-theme iedit smartparens flycheck projectile helm helm-core magit git-commit hydra reveal-in-osx-finder pbcopy osx-trash launchctl yaml-mode xterm-color ws-butler window-numbering which-key web-mode web-beautify web volatile-highlights vi-tilde-fringe use-package tagedit spacemacs-theme spaceline solarized-theme smooth-scrolling smeargle slim-mode shell-pop scss-mode sass-mode restclient restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-yapf popwin pip-requirements persp-mode pcre2el paradox page-break-lines orgit open-junk-file neotree multi-term move-text monokai-theme magit-gitflow macrostep lorem-ipsum linum-relative leuven-theme less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flyspell helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip flx-ido fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu eshell-prompt-extras esh-help emmet-mode elisp-slime-nav diff-hl define-word cython-mode company-web company-tern company-statistics company-quickhelp company-anaconda coffee-mode clean-aindent-mode buffer-move bracketed-paste auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (ujelly-theme oceanic-theme mmm-mode markdown-toc markdown-mode helm-dash dash-at-point gh-md irony flycheck-objc-clang objc-font-lock flycheck-irony ein websocket tern clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider queue clojure-mode vimrc-mode dactyl-mode ob-http pug-mode hide-comnt org-ref key-chord ivy helm-bibtex parsebib biblio biblio-core company-auctex auctex elm-mode elm-yasnippets flycheck-elm yapfify uuidgen toc-org powerline py-isort spinner osx-dictionary org org-plus-contrib org-bullets livid-mode skewer-mode simple-httpd live-py-mode link-hint parent-mode git-link flyspell-correct-helm flyspell-correct pkg-info epl flx eyebrowse evil-visual-mark-mode evil-unimpaired evil-ediff anzu evil goto-chg undo-tree highlight eshell-z dumb-jump diminish column-enforce-mode color-identifiers-mode bind-map bind-key packed dash s avy async popup package-build csharp-mode json-snatcher json-reformat multiple-cursors js2-mode request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter magit-popup with-editor web-completion-data dash-functional pos-tip company yasnippet anaconda-mode pythonic f auto-complete zenburn-theme iedit smartparens flycheck projectile helm helm-core magit git-commit hydra reveal-in-osx-finder pbcopy osx-trash launchctl yaml-mode xterm-color ws-butler window-numbering which-key web-mode web-beautify web volatile-highlights vi-tilde-fringe use-package tagedit spacemacs-theme spaceline solarized-theme smooth-scrolling smeargle slim-mode shell-pop scss-mode sass-mode restclient restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-yapf popwin pip-requirements persp-mode pcre2el paradox page-break-lines orgit open-junk-file neotree multi-term move-text monokai-theme magit-gitflow macrostep lorem-ipsum linum-relative leuven-theme less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flyspell helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip flx-ido fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu eshell-prompt-extras esh-help emmet-mode elisp-slime-nav diff-hl define-word cython-mode company-web company-tern company-statistics company-quickhelp company-anaconda coffee-mode clean-aindent-mode buffer-move bracketed-paste auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+ '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#A6E22E")
  '(pos-tip-foreground-color "#272822")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
  '(standard-indent 2)
+ '(tabbar-background-color "#ffffff")
  '(term-default-bg-color "#002b36")
  '(term-default-fg-color "#839496")
  '(vc-annotate-background nil)
