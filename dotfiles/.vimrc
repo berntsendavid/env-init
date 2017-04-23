@@ -147,7 +147,7 @@ syntax enable
 
 
 set t_Co=256
-colorscheme dracula
+colorscheme jellybeans
 
 " Set utf8 as standard encoding and en_US as the standard language
 set encoding=utf8

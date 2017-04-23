@@ -299,10 +299,7 @@ sh -c "$(curl -#fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/
 ### setup dotfiles ###
 ######################
 
-cp ./dotfiles/.zshrc ~/.zshrc
-cp ./dotfiles/.vimrc ~/.vimrc
-cp ./dotfiles/.profile ~/.profile
-cp ./dotfiles/.spacemacs ~/.spacemacs
+./setup_dotfiles.sh
 
 ######################################
 ######################################

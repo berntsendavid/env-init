@@ -1,5 +1,7 @@
+DEFAULT_USER=`whoami`
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/david.berntsen/.oh-my-zsh
+
+export ZSH=/Users/$DEFAULT_USER/.oh-my-zsh
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export TERM=xterm-256color
@@ -8,8 +10,8 @@ export TERM=xterm-256color
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="spaceship"
-#ZSH_THEME="agnoster"
+#ZSH_THEME="spaceship"
+ZSH_THEME="agnoster"
 
 #
 # bind UP and DOWN arrow keys
@@ -63,6 +65,3 @@ alias w11="g++ -std=c++11 -Wall -Wextra -Wpedantic"
 alias emacs="/usr/local/Cellar/emacs-plus/24.5/Emacs.app/Contents/MacOS/Emacs -nw"
 alias gemacs='/Applications/Emacs.app/Contents/MacOS/Emacs "$@" &'
 alias roulette='if [[ $[ $RANDOM % 6 ] == 0 ]]; then echo "boom"; else echo "click"; fi'
-
-DEFAULT_USER="david.berntsen"
-source ~/src/chpy/chpy.sh
