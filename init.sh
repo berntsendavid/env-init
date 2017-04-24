@@ -306,3 +306,4 @@ sh -c "$(curl -#fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/
 
 cp ./colorschemes/spaceship.zsh-theme ~/.oh-my-zsh/custom/themes/spaceship.zsh-themes
 cp ./colorschemes/wombat256mod.vim ~/.vim/colors/dracula.vim
+cp ./colorschemes/jellybeans.vim ~/.vim/colors/jellybeans.vim
