@@ -1,10 +1,4 @@
-DEFAULT_USER=`whoami`
 # Path to your oh-my-zsh installation.
-
-export ZSH=/Users/$DEFAULT_USER/.oh-my-zsh
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-export TERM=xterm-256color
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -55,8 +49,6 @@ plugins=(
 		zsh-syntax-highlighting
 		zsh-history-substring-search
 )
-
-export GIT_EDITOR=vim
 
 source $ZSH/oh-my-zsh.sh
 
