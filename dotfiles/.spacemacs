@@ -362,6 +362,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 	(package-initialize)
 
   (spacemacs/set-leader-keys (kbd "RET") 'evil-search-highlight-persist-remove-all)
+  (setq-default whitespace-cleanup t)
 
 	;; Global settings
 	(global-company-mode t)
