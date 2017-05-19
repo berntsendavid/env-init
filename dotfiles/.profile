@@ -9,7 +9,6 @@ export PATH="${PATH}:/usr/bin"
 export PATH="${PATH}:/sbin"
 export PATH="${PATH}:/Library/TeX/texbin"
 export PATH="$HOME/.yarn/bin:$PATH"
-
 export GIT_EDITOR=vim
 
 # Path to your oh-my-zsh installation.

@@ -54,6 +54,8 @@ source $ZSH/oh-my-zsh.sh
 
 alias g11="g++ -std=c++11"
 alias w11="g++ -std=c++11 -Wall -Wextra -Wpedantic"
-alias emacs="/usr/local/Cellar/emacs-plus/24.5/Emacs.app/Contents/MacOS/Emacs -nw"
+alias emacs="/usr/local/Cellar/emacs-plus/25.1/Emacs.app/Contents/MacOS/Emacs -nw"
 alias gemacs='/Applications/Emacs.app/Contents/MacOS/Emacs "$@" &'
 alias roulette='if [[ $[ $RANDOM % 6 ] == 0 ]]; then echo "boom"; else echo "click"; fi'
+
+export PATH="$HOME/.yarn/bin:$PATH"

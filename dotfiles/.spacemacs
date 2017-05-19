@@ -56,7 +56,7 @@ values."
      dash
      git
      javascript
-		 (latex :variables
+     (latex :variables
 						latex-build-command "LaTeX"
 						latex-enable-auto-fill t
 						latex-enable-folding t)
@@ -87,6 +87,7 @@ values."
      ;; configuration in `dotspacemacs/user-config'.
      dotspacemacs-additional-packages '(
                                         csharp-mode
+                                        color-theme-solarized
                                         emmet-mode
                                         web-mode
                                         web
@@ -335,7 +336,7 @@ values."
    ))
 
 (defun my-setup-indent (n)
-	;; java/c/c++
+  ;; java/c/c++
   (setq c-basic-offset n)
   ;; web development
   (setq coffee-tab-width n) ; coffeescript
@@ -346,7 +347,12 @@ values."
   (setq web-mode-css-indent-offset n) ; web-mode, css in html file
   (setq web-mode-code-indent-offset n) ; web-mode, js code in html file
   (setq css-indent-offset n) ; css-mode
-	)
+  )
+(defun move-text-bindings ()
+  (define-key evil-visual-state-map "\C-j" (concat ":m '>+1" (kbd "RET") "gv=gv"))
+  (define-key evil-visual-state-map "\C-k" (concat ":m '<-2" (kbd "RET") "gv=gv"))
+  (define-key evil-normal-state-map "\C-k" 'move-text-up)
+  (define-key evil-normal-state-map "\C-j" 'move-text-down))
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
@@ -360,6 +366,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 (defun dotspacemacs/user-config ()
 	(package-initialize)
+  (move-text-bindings)
 
   (spacemacs/set-leader-keys (kbd "RET") 'evil-search-highlight-persist-remove-all)
   (setq-default whitespace-cleanup t)
@@ -471,7 +478,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
  '(evil-insert-state-cursor (quote ("#D50000" bar)) t)
  '(evil-normal-state-cursor (quote ("#F57F17" box)) t)
  '(evil-visual-state-cursor (quote ("#66BB6A" box)) t)
- '(evil-want-Y-yank-to-eol t)
+ '(evil-want-Y-yank-to-eol nil)
  '(fci-rule-color "#073642" t)
  '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
  '(highlight-indent-guides-auto-enabled nil)
@@ -504,7 +511,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(package-selected-packages
    (quote
-    (winum restclient-helm org-pomodoro alert ob-restclient fuzzy company-restclient know-your-http-well company-ansible ox-reveal org-projectile org-present log4e gntp org-download htmlize gnuplot swift-mode jinja2-mode ansible-doc ansible hcl-mode terraform-mode ujelly-theme oceanic-theme mmm-mode markdown-toc markdown-mode helm-dash dash-at-point gh-md irony flycheck-objc-clang objc-font-lock flycheck-irony ein websocket tern clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider queue clojure-mode vimrc-mode dactyl-mode ob-http pug-mode hide-comnt org-ref key-chord ivy helm-bibtex parsebib biblio biblio-core company-auctex auctex elm-mode elm-yasnippets flycheck-elm yapfify uuidgen toc-org powerline py-isort spinner osx-dictionary org org-plus-contrib org-bullets livid-mode skewer-mode simple-httpd live-py-mode link-hint parent-mode git-link flyspell-correct-helm flyspell-correct pkg-info epl flx eyebrowse evil-visual-mark-mode evil-unimpaired evil-ediff anzu evil goto-chg undo-tree highlight eshell-z dumb-jump diminish column-enforce-mode color-identifiers-mode bind-map bind-key packed dash s avy async popup package-build csharp-mode json-snatcher json-reformat multiple-cursors js2-mode request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter magit-popup with-editor web-completion-data dash-functional pos-tip company yasnippet anaconda-mode pythonic f auto-complete zenburn-theme iedit smartparens flycheck projectile helm helm-core magit git-commit hydra reveal-in-osx-finder pbcopy osx-trash launchctl yaml-mode xterm-color ws-butler window-numbering which-key web-mode web-beautify web volatile-highlights vi-tilde-fringe use-package tagedit spacemacs-theme spaceline solarized-theme smooth-scrolling smeargle slim-mode shell-pop scss-mode sass-mode restclient restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-yapf popwin pip-requirements persp-mode pcre2el paradox page-break-lines orgit open-junk-file neotree multi-term move-text monokai-theme magit-gitflow macrostep lorem-ipsum linum-relative leuven-theme less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flyspell helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip flx-ido fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu eshell-prompt-extras esh-help emmet-mode elisp-slime-nav diff-hl define-word cython-mode company-web company-tern company-statistics company-quickhelp company-anaconda coffee-mode clean-aindent-mode buffer-move bracketed-paste auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (color-theme-solarized color-theme seq winum restclient-helm org-pomodoro alert ob-restclient fuzzy company-restclient know-your-http-well company-ansible ox-reveal org-projectile org-present log4e gntp org-download htmlize gnuplot swift-mode jinja2-mode ansible-doc ansible hcl-mode terraform-mode ujelly-theme oceanic-theme mmm-mode markdown-toc markdown-mode helm-dash dash-at-point gh-md irony flycheck-objc-clang objc-font-lock flycheck-irony ein websocket tern clojure-snippets clj-refactor inflections edn paredit peg cider-eval-sexp-fu cider queue clojure-mode vimrc-mode dactyl-mode ob-http pug-mode hide-comnt org-ref key-chord ivy helm-bibtex parsebib biblio biblio-core company-auctex auctex elm-mode elm-yasnippets flycheck-elm yapfify uuidgen toc-org powerline py-isort spinner osx-dictionary org org-plus-contrib org-bullets livid-mode skewer-mode simple-httpd live-py-mode link-hint parent-mode git-link flyspell-correct-helm flyspell-correct pkg-info epl flx eyebrowse evil-visual-mark-mode evil-unimpaired evil-ediff anzu evil goto-chg undo-tree highlight eshell-z dumb-jump diminish column-enforce-mode color-identifiers-mode bind-map bind-key packed dash s avy async popup package-build csharp-mode json-snatcher json-reformat multiple-cursors js2-mode request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter magit-popup with-editor web-completion-data dash-functional pos-tip company yasnippet anaconda-mode pythonic f auto-complete zenburn-theme iedit smartparens flycheck projectile helm helm-core magit git-commit hydra reveal-in-osx-finder pbcopy osx-trash launchctl yaml-mode xterm-color ws-butler window-numbering which-key web-mode web-beautify web volatile-highlights vi-tilde-fringe use-package tagedit spacemacs-theme spaceline solarized-theme smooth-scrolling smeargle slim-mode shell-pop scss-mode sass-mode restclient restart-emacs rainbow-mode rainbow-identifiers rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-yapf popwin pip-requirements persp-mode pcre2el paradox page-break-lines orgit open-junk-file neotree multi-term move-text monokai-theme magit-gitflow macrostep lorem-ipsum linum-relative leuven-theme less-css-mode json-mode js2-refactor js-doc jade-mode info+ indent-guide ido-vertical-mode hy-mode hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flyspell helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-gutter-fringe git-gutter-fringe+ flycheck-pos-tip flx-ido fill-column-indicator fancy-battery expand-region exec-path-from-shell evil-visualstar evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-args evil-anzu eval-sexp-fu eshell-prompt-extras esh-help emmet-mode elisp-slime-nav diff-hl define-word cython-mode company-web company-tern company-statistics company-quickhelp company-anaconda coffee-mode clean-aindent-mode buffer-move bracketed-paste auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#A6E22E")
  '(pos-tip-foreground-color "#272822")
@@ -547,5 +554,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((((class color) (min-colors 89)) (:foreground "#ffffff" :background "#000000" :family "Menlo" :foundry "nil" :slant normal :weight normal :height 120 :width normal))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
