@@ -368,6 +368,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
 	(package-initialize)
   (move-text-bindings)
 
+
+  (spacemacs/set-leader-keys (kbd "/") 'split-window-right-and-focus)
   (spacemacs/set-leader-keys (kbd "RET") 'evil-search-highlight-persist-remove-all)
   (setq-default whitespace-cleanup t)
 
@@ -378,6 +380,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 	;; Default settings
   (fset 'evil-visual-update-x-selection 'ignore)
+  (setq find-file-visit-truename 't)
   (setq mmm-global-mode 'maybe)
   (setq-default
 	 evil-escape-key-sequence "jk"
